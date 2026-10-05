@@ -1,0 +1,4 @@
+server_name,issues,action_required
+db-server-01,CPU high (92%),YES
+cache-server-01,Memory high (95%),YES
+app-server-01,CPU high (88%) & Memory high (91%),YES

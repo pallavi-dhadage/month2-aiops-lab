@@ -1,0 +1,5 @@
+server_name,cpu_usage,memory_usage,status
+web-server-01,45,60,OK
+db-server-01,92,88,HIGH_CPU
+cache-server-01,30,95,HIGH_MEMORY
+app-server-01,88,91,HIGH_BOTH

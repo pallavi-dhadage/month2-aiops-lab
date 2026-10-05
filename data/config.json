@@ -1,0 +1,6 @@
+{
+    "system_name": "AIOps Monitoring Lab",
+    "cpu_threshold": 85,
+    "memory_threshold": 90,
+    "alert_emails": ["admin@example.com", "ops@example.com"]
+}
