@@ -4,7 +4,7 @@ Run this from the root folder: python scripts/day5_file_formats.py
 """
 import csv
 import json
-from pathlib import Path  # Modern way to handle file paths
+from pathlib import Path
 
 print("=" * 40)
 print("1. PATHLIB - Robust File Paths")
@@ -16,22 +16,25 @@ DATA_DIR = BASE_DIR / "data"
 
 json_file_path = DATA_DIR / "config.json"
 csv_file_path = DATA_DIR / "servers.csv"
+report_file_path = DATA_DIR / "alert_report.csv"
 
-print(f"Base Directory: {BASE_DIR}")
-print(f"Data Directory: {DATA_DIR}")
-print(f"Checking if config exists: {json_file_path.exists()}")
+print(f"Project Root: {BASE_DIR}")
+print(f"Data Folder:  {DATA_DIR}")
+print(f"Config File Exists: {json_file_path.exists()}")
 
 
 print("\n" + "=" * 40)
 print("2. JSON - Reading Configuration")
 print("=" * 40)
-# Reading a JSON file
+# Reading a JSON file into a Python dictionary
 with open(json_file_path, "r") as file:
     config = json.load(file)
 
+cpu_limit = config["cpu_threshold"]
+mem_limit = config["memory_threshold"]
+
 print(f"System: {config['system_name']}")
-print(f"CPU Threshold: {config['cpu_threshold']}%")
-print(f"Alerts go to: {', '.join(config['alert_emails'])}")
+print(f"Thresholds -> CPU: {cpu_limit}% | Memory: {mem_limit}%")
 
 
 print("\n" + "=" * 40)
@@ -44,19 +47,14 @@ with open(csv_file_path, "r") as file:
     for row in reader:
         server_data.append(row)
 
-for server in server_data:
-    print(f"Server: {server['server_name']} | CPU: {server['cpu_usage']}% | Mem: {server['memory_usage']}%")
+print(f"Successfully loaded {len(server_data)} servers from CSV.")
 
 
 print("\n" + "=" * 40)
-print("4. MINI PROJECT: Read JSON config + Write CSV report")
+print("4. MINI PROJECT: Generate Alert Report")
 print("=" * 40)
-# Logic: Read the thresholds from JSON, check the servers CSV, 
-# and write a new CSV report containing ONLY the servers that breach the thresholds.
-
+# Logic: Compare CSV data against JSON thresholds and write a new CSV report.
 report_data = []
-cpu_limit = config["cpu_threshold"]
-mem_limit = config["memory_threshold"]
 
 for server in server_data:
     cpu = int(server["cpu_usage"])
@@ -77,14 +75,13 @@ for server in server_data:
         })
 
 # Writing the report to a new CSV file
-report_file_path = DATA_DIR / "alert_report.csv"
 with open(report_file_path, "w", newline="") as file:
-    # These are the column headers for our new CSV
     fieldnames = ["server_name", "issues", "action_required"]
     writer = csv.DictWriter(file, fieldnames=fieldnames)
     
     writer.writeheader() # Write the header row
     writer.writerows(report_data) # Write all the data rows
 
-print(f"✅ Report generated successfully at: {report_file_path}")
+print(f"✅ Report generated successfully!")
+print(f"File saved to: {report_file_path}")
 print(f"Total alerts generated: {len(report_data)}")
